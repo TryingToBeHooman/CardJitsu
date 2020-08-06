@@ -3,9 +3,9 @@ import random, os, time
 #   Print Player Info  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
-winsFile = os.getcwd() + "/savedData/wins.txt"
-beltFile = os.getcwd() + "/savedData/belts.txt"
-achievementsFile = os.getcwd() + "/savedData/achievements.txt"
+winsFile = os.getcwd() + "\\stats\\wins.txt"
+beltFile = os.getcwd() + "\\stats\\belts.txt"
+achievementsFile = os.getcwd() + "\\stats\\achievements.txt"
 f = open(winsFile, 'r')
 g = open(beltFile, 'r')
 e = open(achievementsFile, 'r')
