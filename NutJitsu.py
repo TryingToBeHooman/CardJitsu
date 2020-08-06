@@ -29,8 +29,8 @@ continue_ = input('Press Enter To Start Playing >>>  ')
 
 #   Player Info  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-card_info = {}
-enemy_card_info = {}
+player_cards = []
+enemy_cards = []
 wins = 0
 
 #   Card Types  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
@@ -40,8 +40,6 @@ snow = 'Snow'
 water = 'Water'
 all_cards = [fire, water, snow]
 
-enemy_idx = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-
 #____________________________________________________________________________________________________________________________________________________________________________________
 
 flag = True
@@ -50,88 +48,84 @@ os.system('clear')
 
 #____________________________________________________________________________________________________________________________________________________________________________________
 
-def create_player_card():
-    for i in range(1, 26):
-        entry = []
 
-        player_deck = random.choice(all_cards)
+#   card should be fire, water, or snow
+#   0 = weak, 1 = strong, 2 = neither
+class Card:
+    def __init__(self, type, power):
+        self.power = power
+        self.type = type
+    def compare(self, other):
+        if self.type == other.type:
+            return 2
+        elif self.type == fire:
+            if other.type == snow:
+                return 1
+            return 0
+        elif self.type == snow:
+            if other.type == water:
+                return 1
+            return 0
+        elif self.type == water:
+            if other.type == fire:
+                return 1
+            return 0
+        return 0
 
-        power_range = range(1, 16)
+power_range = range(1, 16)
+
+def create_cards(cardArray):
+    for i in range(25):
+        card_type = random.choice(all_cards)
         power = random.choice(power_range)
+        card = Card(card_type, power)
+        cardArray.append(card)
 
-        entry.append(player_deck)
-        entry.append(power)
-        entry.append(i)
-        
-        key = "card" + str(i) 
-        card_info[key] = entry
+def display_cards(cardArray):
+    for i in range(len(cardArray)):
+        power = cardArray[i].power
+        type = cardArray[i].type
+        print('Card', str(i+1), 'is a', 'Power {}'.format(power), type, 'Card')
 
-#________________________________________________________________________________________________________________________
-
-def create_enemy_card():
-    for k in range(1, 26):
-        enemy_entry = []
-
-        enemy_deck = random.choice(all_cards)
-
-        power_range = range(1, 16)
-        power = random.choice(power_range)
-
-        enemy_entry.append(enemy_deck)
-        enemy_entry.append(power)
-        
-        enemy_key = "card" + str(k) 
-        enemy_card_info[enemy_key] = enemy_entry
-
-#________________________________________________________________________________________________________________________
-
-def display_player_card():
-    for k, v in card_info.items():
-        idx = v[2]
-        power = v[1]
-        card_type = v[0]
-        print('Card', str(idx), 'Is A', 'Power {}'.format(power), card_type, 'Card')
-
-
-#   Use Functions  ____________________________________________________________________________________________________________________________________________________________________________________
-
-create_player_card()
-create_enemy_card()
-
-#   Start Main Loop  ____________________________________________________________________________________________________________________________________________________________________________________
+create_cards(player_cards)
+create_cards(enemy_cards)
 
 while flag:
 
-#   Start Game  ____________________________________________________________________________________________________________________________________________________________________________________
-
     os.system('clear')
-    
-    display_player_card()
+    display_cards(player_cards)
 
 #   Get Player Input  ____________________________________________________________________________________________________________________________________________________________________________________
 
-    player_input = input('What Card Do You Choose? >>>  ')
-
-    key = "card" + player_input
-    value = card_info[key]
-
+    chosen_index = -1
+    while chosen_index == -1:
+        player_input = input('What Card Do You Choose? >>>  ')
+        if player_input.isdigit():
+            if int(player_input) <= len(player_cards) and int(player_input) > 0:
+                chosen_index = int(player_input) -1
+            else:
+                print('Invalid input')
+        else:
+                print('Invalid input')
+    
+    card = player_cards[chosen_index]
+    
 #   Player Place Card  ____________________________________________________________________________________________________________________________________________________________________________________
 
     print()
-    print('You Placed A Power', value[1], value[0], 'Card')
+    print('You Placed A Power', card.power, card.type, 'Card')
     print()
 
 #   Enemy Input  ____________________________________________________________________________________________________________________________________________________________________________________
 
-    enemy_input = random.choice(enemy_idx)
+    enemy_index = random.choice(range(0, len(enemy_cards)-1 ))
 
-    enemy_key = "card" + str(enemy_input)
-    enemy_value = enemy_card_info[enemy_key]
+    enemy_card = enemy_cards[enemy_index]
 
 #   Enemy Place Card  ____________________________________________________________________________________________________________________________________________________________________________________
 
     print()
-    print('The Enemy Placed A Power', enemy_value[1], enemy_value[0], 'Card')
+    print('The Enemy Placed A Power', enemy_card.power, enemy_card.type, 'Card')
     print()
 
 #   Player Beat Enemy Thing  ____________________________________________________________________________________________________________________________________________________________________________________    
@@ -139,181 +133,46 @@ while flag:
 
 #   Player Water Beat Fire  ____________________________________________________________________________________________________________________________________________________________________________________
 
-    if value[0] == water and enemy_value[0] == fire:
+    type = card.compare(enemy_card)
 
-        print() 
-        print('You Win!')
-        print()
-
-        enemy_idx.remove(enemy_input)
-        del enemy_card_info[enemy_key]
-
-#   Player Fire Beat Snow  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif value[0] == fire and enemy_value[0] == snow:
-
+    if type==1:
         print()
         print('You Win!')
         print()
-
-        enemy_idx.remove(enemy_input)
-        del enemy_card_info[enemy_key]
-
-#   Player Snow Beat Water  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif value[0] == snow and enemy_value[0] == water:
-
-        print()
-        print('You Win!')
-        print()
-
-        enemy_idx.remove(enemy_input)
-        del enemy_card_info[enemy_key]
-
-#   Player Water Beat Water  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif value[0] == water and enemy_value[0] == water:
-        if value[1] > enemy_value[1]:
-
-            print()
-            print('You Win!')
-            print()
-
-            enemy_idx.remove(enemy_input)
-            del enemy_card_info[enemy_key]
-
-#   Player Fire Beat Fire  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif value[0] == fire and enemy_value[0] == fire:
-        if value[1] > enemy_value[1]:
-
-            print()
-            print('You Win!')
-            print()
-
-            enemy_idx.remove(enemy_input)
-            del enemy_card_info[enemy_key]
-
-#   Player Snow Beat Snow  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif value[0] == snow and enemy_value[0] == snow:
-        if value[1] > enemy_value[1]:
-
-            print()
-            print('You Win!')
-            print()
-
-            enemy_idx.remove(enemy_input)
-            del enemy_card_info[enemy_key]
-
-#   Enemy Win Thing  ____________________________________________________________________________________________________________________________________________________________________________________
-
-
-#   Enemy Water Beat Fire  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == water and value[0] == fire:
-
+        del enemy_cards[enemy_index]
+    elif type==0:
         print()
         print('You Lose!')
         print()
-
-        del card_info[key]
-
-#   Enemy Fire Beat Snow  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == fire and value[0] == snow:
-
-        print()
-        print('You Lose!')
-        print()
-
-        del card_info[key]
-
-#   Enemy Snow Beat Water  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == snow and value[0] == water:
-
-        print()
-        print('You Lose!')
-        print()
-
-        del card_info[key]
-
-#   Enemy Water Beat Water  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == water and value[0] == water:
-        if enemy_value[1] > value[1]:
-
-            print()
-            print('You Lose!')
-            print()
-
-            del card_info[key]
-
-#   Enemy Fire Beat Fire  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == fire and value[0] == fire:
-        if enemy_value[1] > value[1]:
-
-            print()
-            print('You Lose!')
-            print()
-
-            del card_info[key]
-
-#   Enemy Snow Beat Snow  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == snow and value[0] == snow:
-        if enemy_value[1] > value[1]:
-
-            print()
-            print('You Lose!')
-            print()
-
-            del card_info[key]
-
-#   Tied Round
-
-
-#   Snow Tied With Snow  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == snow and value[0] == snow:
-        if value[1] == enemy_value[1]:
-
+        del player_cards[chosen_index]
+    else:
+        if card.power == enemy_card.power:
             print()
             print("It's A Tie!")
             print()
-
-#   Fire Tied With Fire  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == fire and value[0] == fire:
-        if value[1] == enemy_value[1]:
-
+        elif card.power > enemy_card.power:
             print()
-            print("It's A Tie!")
+            print('You Win!')
             print()
-
-#   Water Tied With Water  ____________________________________________________________________________________________________________________________________________________________________________________
-
-    elif enemy_value[0] == water and value[0] == water:
-        if value[1] == enemy_value[1]:
-
+            del enemy_cards[enemy_index]
+        else:
             print()
-            print("It's A Tie!")
+            print('You Lose!')
             print()
+            del player_cards[chosen_index]
 
 #   Print How Much Cards Player And Enemy Have  ____________________________________________________________________________________________________________________________________________________________________________________
 
-    print('You Have {} Cards'.format(len(card_info)))
-    print('Your Opponent Has {} Cards'.format(len(enemy_card_info)))
+    print('You Have {} Cards'.format(len(player_cards)))
+    print('Your Opponent Has {} Cards'.format(len(enemy_cards)))
 
 #   Detect If Player Wins Or Loses The Game  ____________________________________________________________________________________________________________________________________________________________________________________
 
-    if len(card_info) == 0:
+    if len(player_cards) == 0:
         print('You Lost :(')
         flag = False
 
-    elif len(enemy_card_info) == 0:
+    elif len(enemy_cards) == 0:
         print('You Won!!!')
         flag = False
 
