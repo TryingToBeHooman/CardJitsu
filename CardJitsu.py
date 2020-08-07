@@ -251,5 +251,10 @@ while playing:
             f.write(fBelt)
             f.close()
     
+<<<<<<< HEAD:NutJitsu.py
     unused_variable_for_pausing = input('\nPress Enter To Continue >>>  ')
     print('\n\n\n\n\n\n\n\n')
+=======
+    continue_ = typedInput('Press Enter To Continue >>>  ')
+    print('\n\n\n\n\n\n\n\n')
+>>>>>>> aee304521e691106d5526fcdc8a6a909ba210450:CardJitsu.py
