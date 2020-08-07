@@ -6,25 +6,72 @@ import random, os, time
 winsFile = os.getcwd() + "\\stats\\wins.txt"
 beltFile = os.getcwd() + "\\stats\\belts.txt"
 achievementsFile = os.getcwd() + "\\stats\\achievements.txt"
-f = open(winsFile, 'r')
-g = open(beltFile, 'r')
-e = open(achievementsFile, 'r')
-cool = f.read()
-cool2 = g.read()
-cool3 = e.read()
-e.close()
-f.close()
-g.close()
-print('You Have', cool, 'Wins')
-print('You Have The', cool2)
-print('Achievements:', cool3)
 
-#   Cool Win  ______________________________________________________________________________________________________________________________________________________________________________________________________
+fWins = ''
+fBelt = ''
+fAchievements = ''
 
-fWins = cool
-fBelt = ""
-#   Unused
-fAchievements = ""
+aPlay = '\tOpen the game for the first time\n'
+aTieRound = '\tTie a round\n'
+aWinRound = '\tWin a round\n'
+aLoseRound = '\tLose a round\n'
+aWinGame = '\tWin a Game\n'
+aLoseGame = '\tLose a Game\n'
+aCJMaster = '\tBecome a Card Jitsu master\n'
+aRepeater = '\tPlay the same card type 5 times in a row\n'
+
+trackRepeatAmount = 0
+trackRepeatType = ''
+
+
+try:
+    with open(winsFile, 'r') as file:
+        fWins = file.read()
+        file.close()
+except FileNotFoundError:
+    fWins = '0'
+    file = open(winsFile, 'w')
+    file.write(fWins)
+    file.close()
+
+try:
+    with open(beltFile, 'r') as file:
+        fBelt = file.read()
+        file.close()
+except FileNotFoundError:
+    fBelt = 'White Belt'
+    file = open(beltFile, 'w')
+    file.write(fBelt)
+    file.close()
+
+try:
+    with open(achievementsFile, 'r') as file:
+        fAchievements = file.read()
+        file.close()
+except FileNotFoundError:
+    fAchievements = aPlay
+    file = open(achievementsFile, 'w')
+    file.write(fAchievements)
+    file.close()
+    print('You got the achievement: ' + aPlay)
+
+def tryAddAchievement(achieve):
+    file = open(achievementsFile, 'r')
+    noDupe = True
+    for line in file.readlines():
+        if line == achieve:
+            noDupe = False
+            break
+    if noDupe:
+        file.close()
+        file = open(achievementsFile, 'a')
+        print('You got the achievement: ' + achieve)
+        file.write(achieve)
+    file.close()
+
+print('You Have', fWins, 'Wins')
+print('You Have The', fBelt)
+print('Achievements:\n', fAchievements)
 
 #   Start Game  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
@@ -93,14 +140,14 @@ print('\n\n\n\n\n\n\n\n')
 
 while playing:
 
-    os.system('clear')
+    print('\n\n\n\n\n\n\n\n')
     display_cards(player_cards)
 
 #   Player Card  ____________________________________________________________________________________________________________________________________________________________________________________
 
     player_index = -1
     while player_index == -1:
-        typedInput = input('What Card Do You Choose? >>>  ')
+        typedInput = input('\nWhat Card Do You Choose? >>>  ')
         if typedInput.isdigit():
             if int(typedInput) <= len(player_cards) and int(typedInput) > 0:
                 player_index = int(typedInput) -1
@@ -111,25 +158,36 @@ while playing:
                 
     player_card = player_cards[player_index]
 
-    print('\nYou Placed A Power', player_card.power, player_card.type, 'Card\n')
+    print('\n\nYou Placed A Power', player_card.power, player_card.type, 'Card')
+
+    if trackRepeatAmount == 4:
+        tryAddAchievement(aRepeater)
+    elif player_card.type == trackRepeatType:
+        trackRepeatAmount += 1
+    else:
+        trackRepeatType = player_card.type
+        trackRepeatAmount = 0
 
 #   Enemy Card  ____________________________________________________________________________________________________________________________________________________________________________________
 
     enemy_index = random.choice(range(0, len(enemy_cards)-1 ))
     enemy_card = enemy_cards[enemy_index]
 
-    print('\nThe Enemy Placed A Power', enemy_card.power, enemy_card.type, 'Card\n')
+    print('The Enemy Placed A Power', enemy_card.power, enemy_card.type, 'Card\n\n')
 
     type = player_card.compare(enemy_card)
 
     if type==1:
-        print('\nYou Win!\n')
+        tryAddAchievement(aWinRound)
+        print('You Win!\n')
         del enemy_cards[enemy_index]
     elif type==0:
-        print('\nYou Lose!\n')
+        tryAddAchievement(aLoseRound)
+        print('You Lose!\n')
         del player_cards[player_index]
     else:
-        print("\nIt's A Tie!\n")
+        tryAddAchievement(aTieRound)
+        print("It's A Tie!\n")
     
     print('You Have {} Cards'.format(len(player_cards)))
     print('Your Opponent Has {} Cards'.format(len(enemy_cards)))
@@ -137,10 +195,12 @@ while playing:
 #   no cards = big L  ____________________________________________________________________________________________________________________________________________________________________________________
 
     if len(player_cards) == 0:
+        tryAddAchievement(aLoseGame)
         print('You Lost :(')
         playing = False
 
     elif len(enemy_cards) == 0:
+        tryAddAchievement(aWinGame)
         print('You Won!!!')
         playing = False
         #   Write Wins
@@ -182,6 +242,7 @@ while playing:
 
         if write:
             if fBelt=='Black Belt':
+                tryAddAchievement(aCJMaster)
                 print('You Have Obtained The Black Belt!!!!')
                 print('You Are Now A Card Jitsu Master!!!')
             else:
@@ -190,5 +251,5 @@ while playing:
             f.write(fBelt)
             f.close()
     
-    continue_ = typedInput('Press Enter To Continue >>>  ')
+    unused_variable_for_pausing = input('\nPress Enter To Continue >>>  ')
     print('\n\n\n\n\n\n\n\n')
