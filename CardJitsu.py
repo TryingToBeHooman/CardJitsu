@@ -29,10 +29,13 @@ try:
         fWins = file.read()
         file.close()
 except FileNotFoundError:
+    if not os.path.exists('stats'):
+        os.makedirs('stats')
     fWins = '0'
     file = open(winsFile, 'w')
     file.write(fWins)
     file.close()
+
 
 try:
     with open(beltFile, 'r') as file:
@@ -152,9 +155,9 @@ while playing:
             if int(typedInput) <= len(player_cards) and int(typedInput) > 0:
                 player_index = int(typedInput) -1
             else:
-                print('Invalid typedInput')
+                print('Invalid Input')
         else:
-                print('Invalid typedInput')
+                print('Invalid Input')
                 
     player_card = player_cards[player_index]
 
@@ -251,10 +254,5 @@ while playing:
             f.write(fBelt)
             f.close()
     
-<<<<<<< HEAD:NutJitsu.py
     unused_variable_for_pausing = input('\nPress Enter To Continue >>>  ')
     print('\n\n\n\n\n\n\n\n')
-=======
-    continue_ = typedInput('Press Enter To Continue >>>  ')
-    print('\n\n\n\n\n\n\n\n')
->>>>>>> aee304521e691106d5526fcdc8a6a909ba210450:CardJitsu.py

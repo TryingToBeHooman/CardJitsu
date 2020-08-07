@@ -1,4 +1,1 @@
 	Open the game for the first time
-	Win a round
-	Lose a round
-	Play the same card type 5 times in a row
