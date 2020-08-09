@@ -3,7 +3,7 @@ import random, os, time
 #   Print Player Info  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 winsFile = os.getcwd() + "\\stats\\wins.txt"
-beltFile = os.getcwd() + "\\stats\\belts.txt"
+beltFile = os.getcwd() + "\\stats\\belt.txt"
 achievementsFile = os.getcwd() + "\\stats\\achievements.txt"
 
 fWins = ''
@@ -71,26 +71,23 @@ def tryAddAchievement(achieve):
 
 print('You Have', fWins, 'Wins')
 print('You Have The', fBelt)
-print('Achievements:\n', fAchievements)
+#   Using + instead of , to remove the space that is automatically added when using a ,
+print('\nAchievements:\n' + fAchievements)
 
-#   Start Game  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
+#   Pause Game  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 continue_ = input('Press Enter To Start Playing >>>  ')
 
-#   Player Info  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
+#   Create Cards  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 player_cards = []
 enemy_cards = []
 
 #   Card Types  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-
 fire = 'Fire'
 snow = 'Snow'
 water = 'Water'
 all_cards = [fire, water, snow]
-
 #   card should be fire, water, or snow
-#   0 = weak, 1 = strong, 2 = neither
+#   0 = weak, 1 = strong, 2 = neither, 3 = error
 
 class Card:
     def __init__(self, type, power):
@@ -137,11 +134,11 @@ create_cards(player_cards)
 create_cards(enemy_cards)
 
 playing = True
-print('\n\n\n\n\n\n\n\n')
+print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
 
 while playing:
 
-    print('\n\n\n\n\n\n\n\n')
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
     display_cards(player_cards)
 
 #   Player Card  ____________________________________________________________________________________________________________________________________________________________________________________
@@ -155,7 +152,7 @@ while playing:
             else:
                 print('Invalid Input')
         else:
-                print('Invalid Input')
+            print('Invalid Input')
                 
     player_card = player_cards[player_index]
 
@@ -196,14 +193,15 @@ while playing:
 #   no cards = big L  ____________________________________________________________________________________________________________________________________________________________________________________
 
     if len(player_cards) == 0:
+        playing = False
         tryAddAchievement(aLoseGame)
         print('You Lost :(')
-        playing = False
 
     elif len(enemy_cards) == 0:
+        playing = False
         tryAddAchievement(aWinGame)
         print('You Won!!!')
-        playing = False
+        
         #   Write Wins
         wins = int(fWins) + 1
         fWins = str(wins)
@@ -243,9 +241,9 @@ while playing:
 
         if write:
             if fBelt=='Black Belt':
-                tryAddAchievement(aCJMaster)
                 print('You Have Obtained The Black Belt!!!!')
                 print('You Are Now A Card Jitsu Master!!!')
+                tryAddAchievement(aCJMaster)
             else:
                 print('You Have Obtained The ', fBelt, '!!!!')
             f = open(beltFile, 'w')
@@ -253,4 +251,4 @@ while playing:
             f.close()
     
     unused_variable_for_pausing = input('\nPress Enter To Continue >>>  ')
-    print('\n\n\n\n\n\n\n\n')
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
