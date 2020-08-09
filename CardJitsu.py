@@ -2,7 +2,6 @@ import random, os, time
 
 #   Print Player Info  ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-
 winsFile = os.getcwd() + "\\stats\\wins.txt"
 beltFile = os.getcwd() + "\\stats\\belts.txt"
 achievementsFile = os.getcwd() + "\\stats\\achievements.txt"
