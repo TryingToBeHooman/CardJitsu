@@ -10,18 +10,17 @@ fWins = ''
 fBelt = ''
 fAchievements = ''
 
-aPlay = '\tOpen the game for the first time\n'
-aTieRound = '\tTie a round\n'
-aWinRound = '\tWin a round\n'
-aLoseRound = '\tLose a round\n'
-aWinGame = '\tWin a Game\n'
-aLoseGame = '\tLose a Game\n'
-aCJMaster = '\tBecome a Card Jitsu master\n'
-aRepeater = '\tPlay the same card type 5 times in a row\n'
+aPlay = 'Just Getting Started: Open The Game For The First Time\n'
+aTieRound = 'Close Enough: Tie A Round\n'
+aWinRound = "We're Just Getting Started: Win A Round\n"
+aLoseRound = 'Nice Try: Lose A Round\n'
+aLoseGame = 'Awwww Maann: Lose A Game\n'
+aWinGame = 'Awwww Yeahhh: Win A Game\n'
+aCJMaster = 'Master The Cards: Become A Card Jitsu Master\n'
+aRepeater = 'All Luck Based: Play The Same Card Type 5 Times In A Row\n'
 
 trackRepeatAmount = 0
 trackRepeatType = ''
-
 
 try:
     with open(winsFile, 'r') as file:
@@ -34,7 +33,6 @@ except FileNotFoundError:
     file = open(winsFile, 'w')
     file.write(fWins)
     file.close()
-
 
 try:
     with open(beltFile, 'r') as file:
@@ -93,6 +91,7 @@ all_cards = [fire, water, snow]
 
 #   card should be fire, water, or snow
 #   0 = weak, 1 = strong, 2 = neither
+
 class Card:
     def __init__(self, type, power):
         self.power = power
